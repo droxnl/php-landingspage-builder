@@ -70,6 +70,26 @@ class BlockAdapter
         if ($this->block->get('category')) {
             return $this->block->get('category');
         }
+
+        /** @note check if $this->block->get('title') as %VAR% */
+        if (preg_match('/%(.*?)%/', $this->block->get('title'), $matches)) {
+
+            /** @note mapper for category names */
+            $mapper = [
+                '%NAV%' => 'Navigation',
+                '%HEADER%' => 'Headers',
+                '%HERO%' => 'Hero\'s',
+                '%CONTENT%' => 'Contents',
+                '%FEATURES%' => 'Features',
+                '%GALLERIES%' => 'Galleries',
+                '%TESTIMONIALS%' => 'Testimonials',
+                '%PRICING%' => 'Pricing',
+                '%FOOTER%' => 'Footers',
+            ];
+
+            return $mapper[$matches[0]] ?? phpb_trans('pagebuilder.default-category');
+        }
+
         return phpb_trans('pagebuilder.default-category');
     }
 
@@ -113,13 +133,13 @@ class BlockAdapter
     public function getBlockSettingsArray()
     {
         $blockSettings = $this->block::getDynamicConfig($this->getSlug())['settings'] ?? $this->block->get('settings');
-        if ($this->block->isHtmlBlock() || ! is_array($blockSettings)) {
+        if ($this->block->isHtmlBlock() || !is_array($blockSettings)) {
             return [];
         }
 
         $settings = [];
         foreach ($blockSettings as $name => $blockSetting) {
-            if (! isset($blockSetting['label'])) {
+            if (!isset($blockSetting['label'])) {
                 continue;
             }
             $type = $blockSetting['type'] ?? 'text';
