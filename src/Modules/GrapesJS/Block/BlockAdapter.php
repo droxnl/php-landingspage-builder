@@ -57,6 +57,9 @@ class BlockAdapter
         if ($this->block->get('title')) {
             return $this->block->get('title');
         }
+
+        /** @note here we want to strip off the %VAR% if it contains */
+
         return str_replace('-', ' ', ucfirst($this->getSlug()));
     }
 
@@ -71,23 +74,36 @@ class BlockAdapter
             return $this->block->get('category');
         }
 
-        /** @note check if $this->block->get('title') as %VAR% */
-        if (preg_match('/%(.*?)%/', $this->block->get('title'), $matches)) {
+        /** @var $mapper */
+        $mapper = [
+            'NAV'          => 'Navigation',
+            'HEADER'       => 'Headers',
+            'HERO'         => "Hero's",
+            'CONTENT'      => 'Contents',
+            'FEATURES'     => 'Features',
+            'GALLERIES'    => 'Galleries',
+            'TESTIMONIALS' => 'Testimonials',
+            'PRICING'      => 'Pricing',
+            'FOOTER'       => 'Footers',
+        ];
 
-            /** @note mapper for category names */
-            $mapper = [
-                '%NAV%' => 'Navigation',
-                '%HEADER%' => 'Headers',
-                '%HERO%' => 'Hero\'s',
-                '%CONTENT%' => 'Contents',
-                '%FEATURES%' => 'Features',
-                '%GALLERIES%' => 'Galleries',
-                '%TESTIMONIALS%' => 'Testimonials',
-                '%PRICING%' => 'Pricing',
-                '%FOOTER%' => 'Footers',
-            ];
+        $categoryName = null;
+        $title = $this->block->get('title');
+        $start = strpos($title, '%');
+        $end   = strpos($title, '%', $start + 1);
 
-            return $mapper[$matches[0]] ?? phpb_trans('pagebuilder.default-category');
+        if ($start !== false && $end !== false && $end > $start) {
+            // Extract between %…%
+            $key = substr($title, $start + 1, $end - $start - 1);
+
+            // Map to category
+            $categoryName = $mapper[$key] ?? phpb_trans('pagebuilder.default-category');
+
+            // Remove the %VAR% from the title
+            $newTitle = substr($title, 0, $start) . substr($title, $end + 1);
+
+            // Update the block title
+            $this->block::set('settings', 'title', $newTitle);
         }
 
         return phpb_trans('pagebuilder.default-category');
