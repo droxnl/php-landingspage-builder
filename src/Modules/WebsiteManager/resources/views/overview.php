@@ -14,9 +14,6 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
                 <a class="nav-link <?= phpb_e($pagesTabActive) ?>" data-toggle="tab" href="#pages"><?= phpb_trans('website-manager.pages') ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?= phpb_e($menusTabActive) ?>" data-toggle="tab" href="#menus"><?= phpb_trans('website-manager.menus') ?></a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link <?= phpb_e($settingsTabActive) ?>" data-toggle="tab" href="#settings"><?= phpb_trans('website-manager.settings') ?></a>
             </li>
         </ul>
@@ -84,11 +81,6 @@ $settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'activ
                 <a href="<?= phpb_url('website_manager', ['route' => 'page_settings', 'action' => 'create']) ?>" class="btn btn-primary btn-sm">
                     <?= phpb_trans('website-manager.add-new-page') ?>
                 </a>
-
-            </div>
-            <div id="menus" class="tab-pane <?= phpb_e($menusTabActive) ?>">
-
-                <h4 class="mb-3"><?= phpb_trans('website-manager.menus') ?></h4>
 
             </div>
             <div id="settings" class="tab-pane <?= phpb_e($settingsTabActive) ?>">
