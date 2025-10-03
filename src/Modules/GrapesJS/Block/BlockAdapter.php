@@ -52,13 +52,36 @@ class BlockAdapter
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
+        /** @note here we want to strip off the %VAR% if it contains */
+        $title = $this->block->get('title');
+        if ($title) {
+            $start = strpos($title, '%');
+            $end   = strpos($title, '%', $start + 1);
+
+            if ($start !== false && $end !== false && $end > $start) {
+                // Remove the %VAR% from the title
+                return trim(substr($title, 0, $start) . substr($title, $end + 1));
+            }
+
+            return $title;
+        }
+
         if ($this->block->get('title')) {
             return $this->block->get('title');
         }
 
-        /** @note here we want to strip off the %VAR% if it contains */
+        /** @note find if this also contains on the $this->>getSlug() */
+        if (strpos($this->getSlug(), '%') !== false) {
+            $start = strpos($this->getSlug(), '%');
+            $end   = strpos($this->getSlug(), '%', $start + 1);
+
+            if ($start !== false && $end !== false && $end > $start) {
+                // Remove the %VAR% from the slug
+                return trim(substr($this->getSlug(), 0, $start) . substr($this->getSlug(), $end + 1));
+            }
+        }
 
         return str_replace('-', ' ', ucfirst($this->getSlug()));
     }
@@ -88,7 +111,7 @@ class BlockAdapter
         ];
 
         $categoryName = null;
-        $title = $this->block->get('title');
+        $title = $this->block->get('title') ?? $this->getSlug();
         $start = strpos($title, '%');
         $end   = strpos($title, '%', $start + 1);
 
@@ -104,6 +127,9 @@ class BlockAdapter
 
             // Update the block title
             $this->block::set('settings', 'title', $newTitle);
+
+            // Update the slug
+            $this->block::set('settings', 'slug', str_replace(' ', '-', strtolower($newTitle)));
         }
 
         return phpb_trans('pagebuilder.default-category');
