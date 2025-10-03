@@ -110,6 +110,7 @@ class PageRepository extends BaseRepository implements PageRepositoryContract
                 'meta_title' => $data['meta_title'][$languageCode],
                 'meta_description' => $data['meta_description'][$languageCode],
                 'route' => $data['route'][$languageCode],
+                'show_menu' => $data['show_menu'] ?? '1',
             ]);
         }
 

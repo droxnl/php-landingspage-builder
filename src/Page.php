@@ -90,6 +90,14 @@ class Page implements PageContract
     }
 
     /**
+     * @return mixed|null
+     */
+    public function getShowMenu()
+    {
+        return $this->get('show_menu');
+    }
+
+    /**
      * Return the layout (file name) of this page.
      *
      * @return string

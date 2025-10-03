@@ -36,6 +36,13 @@ $pageTranslations = $page ? $page->getTranslations() : [];
                     </div>
 
                     <div class="form-group required">
+                        <label for="show_menu">
+                            Tonen in menu
+                        </label>
+                        <input type="text" class="form-control" id="show_menu" name="show_menu" value="<?= phpb_field_value('show_menu', $page) ?>" required>
+                    </div>
+
+                    <div class="form-group required">
                         <label for="layout"><?= phpb_trans('website-manager.layout') ?></label>
                         <select class="form-control" id="layout" name="layout" required>
                             <?php
