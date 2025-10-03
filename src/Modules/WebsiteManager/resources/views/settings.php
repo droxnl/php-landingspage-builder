@@ -30,6 +30,13 @@ $setting = phpb_instance('setting');
             </select>
         </div>
 
+        <div class="form-group required">
+            <label for="Sitetitle">
+                Website Titel
+            </label>
+            <input type="text" class="form-control" id="Sitetitle" name="site_title" value="<?php echo \App\Helpers\Render::getSetting('site_title'); ?>" required>
+        </div>
+
         <hr class="mb-3">
 
         <button class="btn btn-primary btn-sm">
